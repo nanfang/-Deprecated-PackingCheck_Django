@@ -1,0 +1,15 @@
+Init from TCO 2014 API Marathon, an Django web app powered by Google and Amazon API
+
+Milestone 1:
+ Target: 2014-11-18 9:00 AM
+ Goal: make a simple packing check list web app for traveller
+ Tech stack:
+  - Django as web framework
+  - Use Google+ API for user auth and for future social feature
+  - Use Amazon AWS S3 API for data storage
+
+
+Milestone 2:
+ Target: TDB
+ - Move storage to Parse
+ - Support advanced features
