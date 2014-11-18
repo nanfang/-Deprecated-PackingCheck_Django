@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Packing Check</title>
+    <meta charset="UTF-8">
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
+          rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
+    <script>
+        var helper = (function () {
+            var BASE_API_PATH = 'plus/v1/';
+
+            return {
+                /**
+                 * Hides the sign in button and starts the post-authorization operations.
+                 *
+                 * @param {Object} authResult An Object which contains the access token and
+                 *   other authentication information.
+                 */
+                onSignInCallback: function (authResult) {
+                    gapi.client.load('plus', 'v1').then(function () {
+                        $('#authResult').html('Auth Result:<br/>');
+                        {#                        for (var field in authResult) {#}
+                        {#                            $('#authResult').append(' ' + field + ': ' +#}
+                        {#                                    authResult[field] + '<br/>');#}
+                        {#                        }#}
+                        if (authResult['access_token']) {
+                            $('#authOps').show('slow');
+                            $('#gConnect').hide();
+                            helper.profile();
+                            {#                            helper.people();#}
+                        } else if (authResult['error']) {
+                            // There was an error, which means the user is not signed in.
+                            // As an example, you can handle by writing to the console:
+                            console.log('There was an error: ' + authResult['error']);
+                            $('#authResult').append('Logged out');
+                            $('#authOps').hide('slow');
+                            $('#gConnect').show();
+                        }
+                        {#                        console.log('authResult', authResult);#}
+                    });
+                },
+
+                /**
+                 * Calls the OAuth2 endpoint to disconnect the app for the user.
+                 */
+                disconnect: function () {
+                    // Revoke the access token.
+                    $.ajax({
+                        type: 'GET',
+                        url: 'https://accounts.google.com/o/oauth2/revoke?token=' +
+                                gapi.auth.getToken().access_token,
+                        async: false,
+                        contentType: 'application/json',
+                        dataType: 'jsonp',
+                        success: function (result) {
+                            console.log('revoke response: ' + result);
+                            $('#authOps').hide();
+                            $('#profile').empty();
+                            $('#visiblePeople').empty();
+                            $('#authResult').empty();
+                            $('#gConnect').show();
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                },
+
+                /**
+                 * Gets and renders the list of people visible to this app.
+                 */
+                people: function () {
+                    gapi.client.plus.people.list({
+                        'userId': 'me',
+                        'collection': 'visible'
+                    }).then(function (res) {
+                        var people = res.result;
+                        $('#visiblePeople').empty();
+                        var count = 0;
+                        for (var personIndex in people.items) {
+                            person = people.items[personIndex];
+                            $('#visiblePeople').append('<img src="' + person.image.url + '">');
+                            count++;
+                            if (count > 5) {
+                                break;
+                            }
+
+                        }
+                    });
+                },
+
+                /**
+                 * Gets and renders the currently signed in user's profile data.
+                 */
+                profile: function () {
+                    gapi.client.plus.people.get({
+                        'userId': 'me'
+                    }).then(function (res) {
+                        var profile = res.result;
+                        $('#profile').empty();
+                        $('#profile').append(
+                                $('<span><img src=\"' + profile.image.url + '\"></span>'));
+                        $('#profile').append(
+                                $('<span>Hello ' + profile.displayName + '</span>'));
+                        if (profile.cover && profile.coverPhoto) {
+                            $('#profile').append($('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>'));
+                        }
+                    }, function (err) {
+                        var error = err.result;
+                        $('#profile').empty();
+                        $('#profile').append(error.message);
+                    });
+                }
+            };
+        })();
+        function signinCallback(authResult) {
+            if (authResult['status']['signed_in']) {
+                helper.onSignInCallback(authResult);
+
+                // Update the app to reflect a signed in user
+                // Hide the sign-in button now that the user is authorized, for example:
+                document.getElementById('signinButton').setAttribute('style', 'display: none');
+            } else {
+                // Update the app to reflect a signed out user
+                // Possible error values:
+                //   "user_signed_out" - User is signed-out
+                //   "access_denied" - User denied access to your app
+                //   "immediate_failed" - Could not automatically log in the user
+                console.log('Sign-in state: ' + authResult['error']);
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="navbar  navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">Packing Check</a>
+
+            <div class="nav-collapse collapse pull-right">
+                <ul class="nav">
+                    <li class="divider-vertical"></li>
+
+                    {#                    <li class="dropdown">#}
+                    {#                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">#}
+                    {#                            Welcome, <?=$_SESSION['username']?><b class="caret"></b>#}
+                    {#                        </a>#}
+                    {#                        <ul class="dropdown-menu">#}
+                    {#                            <li><a href="/logout.php"><i class="icon-off"></i> Log Out</a></li>#}
+                    {#                        </ul>#}
+                    {#                    </li>#}
+
+                    <li>
+                        <span id="signinButton" style="display: inline-block; margin-top: 10px">
+                            <span
+                                    class="g-signin"
+                                    data-callback="signinCallback"
+                                    data-clientid="911523008394-cnho7h2s1j1b2bgclfcd9m7po1s76pji.apps.googleusercontent.com"
+                                    data-cookiepolicy="single_host_origin"
+                                    data-requestvisibleactions="http://schema.org/AddAction"
+                                    data-scope="https://www.googleapis.com/auth/plus.login">
+                             </span>
+                        </span>
+
+                        <span id="authOps" style="display:none">
+                            <span id="profile"></span>
+                            <span id="visiblePeople"></span>
+                        </span>
+                    </li>
+
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+<!-- /container -->
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<script src="https://apis.google.com/js/client:platform.js" async defer></script>
+</body>
+</html>

@@ -20,3 +20,4 @@ aa.iml
 .settings/
 
 *.iml
+db.sqlite3
