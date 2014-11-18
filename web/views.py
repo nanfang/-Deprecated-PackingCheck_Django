@@ -6,7 +6,8 @@ from packingcheck.s3 import s3_storage
 
 
 def index(request):
-    return render(request, 'index.html', {})
+    print(_user(request))
+    return render(request, 'index.html', {'userID': _user(request)})
 
 
 def check_list(request):

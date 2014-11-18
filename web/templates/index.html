@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
     <p>
-        <button class="btn btn-large btn-primary" data-toggle="modal" data-target="#add-check-list">
+        <button id="create" class="btn btn-large btn-primary hide" data-toggle="modal" data-target="#add-check-list">
             Create New Packing List
         </button>
+        <span id="no-auth-message" class="hide">Please sign in to create your packing list</span>
     </p>
     <ul class="thumbnails" id="check-list">
         {# check list #}
@@ -45,8 +46,15 @@
     <script>
         function show() {
             $.getJSON("/check-list", function (data) {
+                $("#create").show();
+                $("#no-auth-message").hide();
                 $("#check-list").empty().append($("#check-list-tmpl").tmpl(data));
             });
+        }
+        function unshow() {
+            $("#create").hide();
+            $("#no-auth-message").show();
+            $("#check-list").empty()
         }
     </script>
 {% endblock %}
