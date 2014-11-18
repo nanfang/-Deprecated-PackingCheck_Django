@@ -38,10 +38,13 @@
                             // There was an error, which means the user is not signed in.
                             // As an example, you can handle by writing to the console:
                             $.removeCookie("userID");
+
+                            unshow();
                             console.log('There was an error: ' + authResult['error']);
                             $('#authResult').append('Logged out');
                             $('#authOps').hide('slow');
                             $('#gConnect').show();
+
                         }
                         {#                        console.log('authResult', authResult);#}
                     });
@@ -123,6 +126,7 @@
                         var error = err.result;
                         $('#profile').empty();
                         $('#profile').append(error.message);
+                        unshow();
                     });
                 }
             };
@@ -142,7 +146,7 @@
                 //   "access_denied" - User denied access to your app
                 //   "immediate_failed" - Could not automatically log in the user
                 console.log('Sign-in state: ' + authResult['error']);
-
+                unshow();
 
             }
         }
