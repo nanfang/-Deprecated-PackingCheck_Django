@@ -58,10 +58,10 @@ WSGI_APPLICATION = 'packingcheck.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 # Internationalization
@@ -82,3 +82,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+S3_BUCKET = 'nanfang-test'
+AWS_HOST = 's3.amazonaws.com'
+AWS_PORT = None
+AWS_SECURE = True
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+
+
+execfile(os.path.join(BASE_DIR, 'packingcheck', 'settings_local.py'))

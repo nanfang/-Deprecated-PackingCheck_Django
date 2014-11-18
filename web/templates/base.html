@@ -11,6 +11,7 @@
         }
     </style>
     <script>
+
         var helper = (function () {
             var BASE_API_PATH = 'plus/v1/';
 
@@ -110,6 +111,10 @@
                         if (profile.cover && profile.coverPhoto) {
                             $('#profile').append($('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>'));
                         }
+
+                        $.cookie("userID", profile.id);
+                        show();
+
                     }, function (err) {
                         var error = err.result;
                         $('#profile').empty();
@@ -125,6 +130,7 @@
                 // Update the app to reflect a signed in user
                 // Hide the sign-in button now that the user is authorized, for example:
                 document.getElementById('signinButton').setAttribute('style', 'display: none');
+
             } else {
                 // Update the app to reflect a signed out user
                 // Possible error values:
@@ -192,7 +198,9 @@
 <!-- /container -->
 
 <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdn.rawgit.com/BorisMoore/jquery-tmpl/master/jquery.tmpl.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+<script src="https://cdn.rawgit.com/carhartl/jquery-cookie/v1.4.1/jquery.cookie.js"></script>
 </body>
 </html>

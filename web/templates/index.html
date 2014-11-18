@@ -1,4 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-    Index contentf
+    <p>
+        <button class="btn btn-large btn-primary" data-toggle="modal" data-target="#add-check-list">
+            Create New Packing List
+        </button>
+    </p>
+    <ul class="thumbnails" id="check-list">
+        {# check list #}
+    </ul>
+
+
+    <div id="add-check-list" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <form name="comment" method="POST" action="/check-list/add">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Create a new list</h3>
+            </div>
+            <div class="modal-body">
+                <p><input name="list-name" type="text" placeholder="List Name"/></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-primary">Create</button>
+            </div>
+            {% csrf_token %}
+        </form>
+    </div>
+    <script id="check-list-tmpl" type="text/x-jquery-tmpl">
+        <li class="span3">
+            <a href="/items?check-list=${name}" class="thumbnail">
+                <img src="http://placekitten.com/300/300?image=1" alt="">
+
+                <div class="caption">
+                    <h3>${name}</h3>
+                </div>
+            </a>
+        </li>
+
+
+
+    </script>
+
+    <script>
+        function show() {
+            $.getJSON("/check-list", function (data) {
+                $("#check-list").empty().append($("#check-list-tmpl").tmpl(data));
+            });
+        }
+    </script>
 {% endblock %}
