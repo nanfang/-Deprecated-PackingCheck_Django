@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^check-list$', views.check_list, name='check-list'),
     url(r'^check-list/add$', views.add_list, name='add-list'),
-
     url(r'^items$', views.items, name='items'),
+    url(r'^items/add$', views.add_item, name='add-list'),
 )
+
+
