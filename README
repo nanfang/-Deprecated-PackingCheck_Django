@@ -8,7 +8,6 @@ Milestone 1: Done
   - Use Google+ API for user auth and for future social feature
   - Use Amazon AWS S3 API for data storage
 
-
 Milestone 2:
  Target: 2015-02-01
  - Move storage to parse.com
