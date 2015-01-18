@@ -1,0 +1,7 @@
+Added on 2014-12-14
+1. Upgrade to bootstrap3
+ - pick up CSS knowledge
+ - pick up bootstrap3 knowledge
+2. Make a cleaner Google+ signin/signout
+3. Use AngularJS for FE
+4. Move S3 to parse.com
